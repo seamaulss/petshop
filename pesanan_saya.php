@@ -15,6 +15,14 @@ if (!$result) {
   die(mysqli_error($conn));
 }
 
+$notif_result = mysqli_query($conn, "
+  SELECT * FROM notifikasi 
+  WHERE user_id = $user_id 
+  AND status = 'unread'
+  ORDER BY id DESC
+");
+
+$jumlah_notif = mysqli_num_rows($notif_result);
 
 ?>
 
@@ -37,6 +45,23 @@ if (!$result) {
       <div class="alert alert-info">Belum ada pesanan</div>
     <?php else: ?>
 
+      <?php if ($jumlah_notif > 0): ?>
+        <?php while ($n = mysqli_fetch_assoc($notif_result)) : ?>
+          <div class="alert alert-info">
+            <?= htmlspecialchars($n['pesan']); ?>
+          </div>
+        <?php endwhile; ?>
+
+        <?php
+        mysqli_query($conn, "
+    UPDATE notifikasi 
+    SET status = 'read'
+    WHERE user_id = $user_id
+  ");
+        ?>
+      <?php endif; ?>
+
+
       <table class="table table-bordered">
         <tr>
           <th>ID</th>
@@ -47,12 +72,12 @@ if (!$result) {
         </tr>
 
         <?php while ($p = mysqli_fetch_assoc($result)): ?>
-
           <?php
           $warna = 'secondary';
-          if ($p['status'] == 'pending') $warna = 'warning';
-          if ($p['status'] == 'diproses') $warna = 'primary';
-          if ($p['status'] == 'selesai') $warna = 'success';
+          if ($p['status'] == 'pending')   $warna = 'warning';
+          if ($p['status'] == 'diproses')  $warna = 'primary';
+          if ($p['status'] == 'selesai')   $warna = 'success';
+          if ($p['status'] == 'batal')     $warna = 'danger';
           ?>
 
           <tr>
@@ -70,9 +95,7 @@ if (!$result) {
               </a>
             </td>
           </tr>
-
         <?php endwhile; ?>
-
       </table>
 
     <?php endif; ?>
