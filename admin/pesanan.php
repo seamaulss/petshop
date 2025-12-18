@@ -41,7 +41,7 @@ $result = mysqli_query($conn, "
   FROM pesanan p 
   JOIN users u ON p.user_id = u.id
   $where
-  ORDER BY p.id ASC
+  ORDER BY p.id DESC
   LIMIT $limit OFFSET $offset
 ");
 
