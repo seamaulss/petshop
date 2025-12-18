@@ -89,7 +89,6 @@ $pending = mysqli_fetch_assoc($q4)['total'];
 <h5>Pesanan Terbaru</h5>
 <table class="table table-bordered">
 <tr>
-  <th>ID</th>
   <th>User</th>
   <th>Total</th>
   <th>Status</th>
@@ -106,7 +105,6 @@ $latest = mysqli_query($conn, "
 while ($p = mysqli_fetch_assoc($latest)) :
 ?>
 <tr>
-  <td>#<?= $p['id']; ?></td>
   <td><?= htmlspecialchars($p['nama']); ?></td>
   <td>Rp <?= number_format($p['total']); ?></td>
   <td><?= $p['status']; ?></td>
